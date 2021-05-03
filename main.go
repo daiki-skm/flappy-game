@@ -2,23 +2,24 @@ package main
 
 import (
 	"fmt"
+	"image"
+	_ "image/png"
+	"math/rand"
+	"os"
+	"time"
+
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/imdraw"
 	"github.com/faiface/pixel/pixelgl"
 	"github.com/faiface/pixel/text"
 	"golang.org/x/image/colornames"
 	"golang.org/x/image/font/basicfont"
-	"image"
-	_ "image/png"
-	"math/rand"
-	"os"
-	"time"
 )
 
 type Hero struct {
 	velocity pixel.Vec
-	rect pixel.Rect
-	hp int
+	rect     pixel.Rect
+	hp       int
 }
 
 type Wall struct {
@@ -52,16 +53,16 @@ func run() {
 		panic(err)
 	}
 
-	pic, err := loadPicture("flying.png")
+	pic, err := loadPicture("images/flying.png")
 	if err != nil {
 		panic(err)
 	}
 	sprite := pixel.NewSprite(pic, pic.Bounds())
 
-	hero := Hero {
+	hero := Hero{
 		velocity: pixel.V(200, 0),
-		rect: pixel.R(0,0,180,100).Moved(pixel.V(win.Bounds().W() / 4, win.Bounds().H() / 2)),
-		hp: 100,
+		rect:     pixel.R(0, 0, 180, 100).Moved(pixel.V(win.Bounds().W()/4, win.Bounds().H()/2)),
+		hp:       100,
 	}
 
 	var walls []Wall
@@ -82,7 +83,7 @@ func run() {
 
 		switch status {
 		case "playing":
-			if len(walls) <= 0 || distance - (walls[len(walls) - 1].X - win.Bounds().W()) >= 400 {
+			if len(walls) <= 0 || distance-(walls[len(walls)-1].X-win.Bounds().W()) >= 400 {
 				newWall := Wall{}
 				newWall.X = distance + win.Bounds().W()
 				newWall.W = win.Bounds().W() / 10
@@ -99,11 +100,11 @@ func run() {
 
 			for _, wall := range walls {
 				drawing.Color = colornames.Beige
-				drawing.Push(pixel.V(wall.X - distance, wall.Y))
-				drawing.Push(pixel.V(wall.X - distance + wall.W, wall.Y - wall.H))
+				drawing.Push(pixel.V(wall.X-distance, wall.Y))
+				drawing.Push(pixel.V(wall.X-distance+wall.W, wall.Y-wall.H))
 				drawing.Rectangle(0)
 
-				if wall.X - distance <= hero.rect.Max.X && wall.X - distance + wall.W >= hero.rect.Min.X && wall.Y >= hero.rect.Min.Y && wall.Y - wall.H <= hero.rect.Max.Y {
+				if wall.X-distance <= hero.rect.Max.X && wall.X-distance+wall.W >= hero.rect.Min.X && wall.Y >= hero.rect.Min.Y && wall.Y-wall.H <= hero.rect.Max.Y {
 					drawing.Color = colornames.Red
 					drawing.Push(hero.rect.Min)
 					drawing.Push(hero.rect.Max)
@@ -114,7 +115,7 @@ func run() {
 					}
 				}
 
-				if wall.X - distance < - wall.W {
+				if wall.X-distance < -wall.W {
 					walls = walls[1:]
 				}
 			}
@@ -129,12 +130,12 @@ func run() {
 			if win.Pressed(pixelgl.KeySpace) {
 				hero.velocity.Y = 500
 			}
-			hero.rect = hero.rect.Moved(pixel.V(0, hero.velocity.Y * dt))
+			hero.rect = hero.rect.Moved(pixel.V(0, hero.velocity.Y*dt))
 			hero.velocity.Y -= 900 * dt
 
 			mat := pixel.IM
-			mat = mat.ScaledXY(pixel.ZV, pixel.V(hero.rect.W() / sprite.Frame().W(), hero.rect.H() / sprite.Frame().H()))
-			mat = mat.Moved(pixel.V(hero.rect.Min.X + hero.rect.W() / 2, hero.rect.Min.Y + hero.rect.H() / 2))
+			mat = mat.ScaledXY(pixel.ZV, pixel.V(hero.rect.W()/sprite.Frame().W(), hero.rect.H()/sprite.Frame().H()))
+			mat = mat.Moved(pixel.V(hero.rect.Min.X+hero.rect.W()/2, hero.rect.Min.Y+hero.rect.H()/2))
 			sprite.Draw(win, mat)
 		case "gameover":
 			basicTxt.Clear()
@@ -145,7 +146,7 @@ func run() {
 			basicTxt.Draw(win, pixel.IM.Scaled(basicTxt.Orig, 4))
 			if win.Pressed(pixelgl.KeySpace) {
 				hero.hp = 100
-				hero.rect = pixel.R(0,0,180,100).Moved(pixel.V(win.Bounds().W() / 4, win.Bounds().H() / 2))
+				hero.rect = pixel.R(0, 0, 180, 100).Moved(pixel.V(win.Bounds().W()/4, win.Bounds().H()/2))
 				status = "playing"
 				distance = 0.0
 				last = time.Now()
