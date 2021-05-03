@@ -10,7 +10,6 @@ import (
 	"golang.org/x/image/font/basicfont"
 	"image"
 	_ "image/png"
-	"math"
 	"math/rand"
 	"os"
 	"time"
@@ -59,9 +58,9 @@ func run() {
 	}
 	sprite := pixel.NewSprite(pic, pic.Bounds())
 
-	hero := Hero{
+	hero := Hero {
 		velocity: pixel.V(200, 0),
-		rect: pixel.R(0,0,170,100).Moved(pixel.V(win.Bounds().W() / 4, win.Bounds().H() / 2)),
+		rect: pixel.R(0,0,180,100).Moved(pixel.V(win.Bounds().W() / 4, win.Bounds().H() / 2)),
 		hp: 100,
 	}
 
@@ -135,12 +134,9 @@ func run() {
 
 			mat := pixel.IM
 			mat = mat.ScaledXY(pixel.ZV, pixel.V(hero.rect.W() / sprite.Frame().W(), hero.rect.H() / sprite.Frame().H()))
-			// add
-			mat = mat.Rotated(pixel.ZV, math.Atan(hero.velocity.Y / (hero.velocity.X * 3)))
 			mat = mat.Moved(pixel.V(hero.rect.Min.X + hero.rect.W() / 2, hero.rect.Min.Y + hero.rect.H() / 2))
 			sprite.Draw(win, mat)
 		case "gameover":
-			//os.Exit(3)
 			basicTxt.Clear()
 			basicTxt.Color = colornames.Green
 			line := fmt.Sprintf("Game Over! Score: %d\n", int(distance))
@@ -149,7 +145,7 @@ func run() {
 			basicTxt.Draw(win, pixel.IM.Scaled(basicTxt.Orig, 4))
 			if win.Pressed(pixelgl.KeySpace) {
 				hero.hp = 100
-				hero.rect = pixel.R(0,0,100,100).Moved(pixel.V(win.Bounds().W() / 4, win.Bounds().H() / 2))
+				hero.rect = pixel.R(0,0,180,100).Moved(pixel.V(win.Bounds().W() / 4, win.Bounds().H() / 2))
 				status = "playing"
 				distance = 0.0
 				last = time.Now()
