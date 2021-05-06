@@ -1,4 +1,4 @@
-# game
+# window game
 
 The following command will open the game window.
 ```
