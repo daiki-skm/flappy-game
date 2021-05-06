@@ -137,6 +137,15 @@ func run() {
 			mat = mat.ScaledXY(pixel.ZV, pixel.V(hero.rect.W()/sprite.Frame().W(), hero.rect.H()/sprite.Frame().H()))
 			mat = mat.Moved(pixel.V(hero.rect.Min.X+hero.rect.W()/2, hero.rect.Min.Y+hero.rect.H()/2))
 			sprite.Draw(win, mat)
+
+			basicTxt.Clear()
+			basicTxt.Color = colornames.Green
+			line := fmt.Sprintf("hp: %d\n", hero.hp)
+			basicTxt.Dot.X -= basicTxt.BoundsOf(line).W() / 2
+			basicTxt.Dot.Y += basicTxt.BoundsOf(line).H() * 6
+			fmt.Fprintf(basicTxt, line)
+			basicTxt.Draw(win, pixel.IM.Scaled(basicTxt.Orig, 4))
+
 		case "gameover":
 			basicTxt.Clear()
 			basicTxt.Color = colornames.Green
