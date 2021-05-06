@@ -1,4 +1,4 @@
-# window game
+# flappy game
 
 The following command will open the game window.
 ```
